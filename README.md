@@ -1,6 +1,18 @@
 # README.md
 
 
+Structure
+======================================
+
+- data folder: stores csv files of daily bitcoin prices and weekly prices from both pandas and sql methods
+- db folder: stores sql db file of bitcoin prices collected from Alpha vantage API
+- bitcoin_price.py: contains methods to calculate tasks of the assessment
+	- There are 2 separated sections In memory and SQL methods
+	- For each method, there are 2 main functions: 
+		+ get_weekly_report[pandas or query](): Computes some basic statistical measurements on daily bitcoin prices and groups by week of the years (manippulate on dataframe or SQL query)
+		+ get_relative_span[pandas or query](): Computes relative span for each week then gets the Maximum relative span value (manippulate on dataframe or SQL query)
+
+
 How to validate the code
 ======================================
 
@@ -30,7 +42,7 @@ How to run
 There are 2 ways to run the code:
 
 - Run on Python IDE
-- Run on Docker container
+- Run on Docker container (tested on Docker version 17.12.0-ce, build c97c6d6 for Windows)
 
 ## 1 . Run on Python IDE (eg: Pycharm)
 
@@ -64,8 +76,8 @@ docker build -t bitcoin-price .
 docker run bitcoin-price
 ```
 
-- For validating the result, you have to run these commands to get result from container. Copy csv and database files from container to host:
+- For validating the result, you have to run these commands to get results from container. Copy csv and database files from container to host, then you can check the files:
 ```
-docker cp {CONTAINER ID}:/data data
-docker cp {CONTAINER ID}:/db db
+docker cp {CONTAINER ID}:/data ./
+docker cp {CONTAINER ID}:/db ./
 ```
