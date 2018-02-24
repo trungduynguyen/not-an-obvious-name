@@ -1,7 +1,6 @@
 # README.md
 
 
-
 How to validate the code
 ======================================
 
@@ -33,7 +32,7 @@ There are 2 ways to run the code:
 - Run on Python IDE
 - Run on Docker container
 
-## 1 . Run on Python IDE
+## 1 . Run on Python IDE (eg: Pycharm)
 
 - Clone the repo following the link: https://github.com/trungduynguyen/not-an-obvious-name.git
 
@@ -54,6 +53,7 @@ python ./bitcoin_price.py
 git clone https://github.com/trungduynguyen/not-an-obvious-name.git
 ```
 
+- First, make sure that you are at the directory containing the Dockerfile.
 - Build Docker image
 ```
 docker build -t bitcoin-price .
@@ -64,7 +64,7 @@ docker build -t bitcoin-price .
 docker run bitcoin-price
 ```
 
-- For validate the result, you have to run these commands to get result from container. Copy csv and database files from container to host:
+- For validating the result, you have to run these commands to get result from container. Copy csv and database files from container to host:
 ```
 docker cp {CONTAINER ID}:/data data
 docker cp {CONTAINER ID}:/db db
