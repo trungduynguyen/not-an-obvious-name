@@ -9,9 +9,21 @@ Structure
 - bitcoin_price.py: contains methods to calculate tasks of the assessment
 	- There are 2 separated sections In memory and SQL methods
 	- For each method, there are 2 main functions: 
-		+ get_weekly_report[pandas or query](): Computes some basic statistical measurements on daily bitcoin prices and groups by week of the years (manippulate on dataframe or SQL query)
-		+ get_relative_span[pandas or query](): Computes relative span for each week then gets the Maximum relative span value (manippulate on dataframe or SQL query)
+		+ get_weekly_report_[pandas or query]: Computes some basic statistical measurements on daily bitcoin prices and groups by week of the years (manippulate on dataframe or SQL query)
+		+ get_relative_span_[pandas or query]: Computes relative span for each week then gets the Maximum relative span value (manippulate on dataframe or SQL query)
 
+- Table bitcoin:
+
+| **FIELD** | **Type** |
+| :---: | :---: |
+| date |  DATETIME PRIMARY KEY |
+| open | FLOAT |
+| high | FLOAT |
+| low | FLOAT |
+| close | FLOAT |
+| volume | FLOAT |
+| market_cap | FLOAT |
+| year_week | VARCHAR(15) |
 
 How to validate the code
 ======================================
@@ -29,7 +41,8 @@ How to validate the code
 - Compute the average price of each week (only on business day from MON to FRI): 
 	- Check the 'pandas_weekly_report.csv' for the in memory python method
 	- Check the 'sql_weekly_report.csv' for the database using query
-Note that: the 2 csv files must have the same values to consider the task is correct
+
+Note that: the 2 csv files must have the same values to be considered that the task is correct
 
 - Compute what is the week that had the greatest relative span on closing prices:
 	- We have the two results which come from calculation in pandas dataframe and SQL query. The 2 results printed on the console must have the same week of the year and relative span value to be considered as the correct results
