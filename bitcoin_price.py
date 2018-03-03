@@ -2,7 +2,6 @@
 """
 @author: Trung Duy NGUYEN
 """
-
 import requests
 import os
 import sqlite3
@@ -57,7 +56,7 @@ class BitcoinPrice:
     def get_weekly_stats(self):
         pass
     
-    def get_relative_span(self):
+    def get_max_relative_span(self):
         pass
 
 
@@ -81,7 +80,7 @@ class BitcoinPricePandas(BitcoinPrice):
         return df_report
     
     @staticmethod
-    def relative_span(self,x):
+    def relative_span(x):
         """
         Apply mathematical formula to get weekly relative span
         """
@@ -91,9 +90,10 @@ class BitcoinPricePandas(BitcoinPrice):
         """
         Get maximum relative span by pandas dataframe
         """
+        print(df_weekly.head())
         result = df_weekly.apply(self.relative_span,axis=1) #Apply relative_span for each row
         df_span = pd.DataFrame(dict(relative_span=result),index =df_weekly.index)
-        print("Maximum relative span by Pandas Dataframe:\n")
+        print("Maximum relative span by Pandas Dataframe:")
         print(df_span[df_span['relative_span'] == df_span['relative_span'].max() ])  
     
     def process(self):
@@ -165,8 +165,7 @@ class BitcoinPricePandas(BitcoinPrice):
 #        
    
 def main():
-    
-    
+       
     parser = argparse.ArgumentParser()
     
     parser.add_argument('api_key', action="store", type=str)
@@ -176,20 +175,14 @@ def main():
     
     #logger = logging.getLogger(__name__)
     logging.info('Starting process')
-    logging.basicConfig(level=logging.INFO)
     os.chdir(os.getcwd())
   
     #Inititate new instance
-#    Bitcoin = BitcoinPrice(args.api_key)
-    
-    # Get Bitcoin daily prices via API and store to daily_data.csv file
-#    Bitcoin.get_digital_currency_daily()
-    
     btc_pandas = BitcoinPricePandas(args.api_key)
     
+    # Get Bitcoin daily prices via API and store to daily_data.csv file 
     btc_pandas.get_digital_currency_daily()
-    
-    print(btc_pandas.daily_df.head())
+    btc_pandas.process()
 #  
 #    # Create sqlite table to store data
 #    Bitcoin.create_table()
