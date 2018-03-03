@@ -38,7 +38,7 @@ class BitcoinPrice:
         response= requests.get(self.url.format(symbol,market,self.api_key))
         
         json_response = response.json()
-
+        logging.info("Collected daily data!")
         df = pd.DataFrame(json_response["Time Series (Digital Currency Daily)"]).T[self.selected_cols]
         df['Date'] = pd.to_datetime(df.index)   #Transform Date column to datetime datatype
         df.set_index('Date', inplace=True)
@@ -48,6 +48,7 @@ class BitcoinPrice:
         df['year_week'] = df.index.to_series().apply(lambda x: dt.datetime.strftime(x,'%Y-week(%U)'))   #Get week of the date
         
         df.to_csv('./data/daily_data.csv',sep=',')
+        logging.info("Saved data to 'daily_data.csv' !")
 
         
     
@@ -63,7 +64,7 @@ class BitcoinPrice:
         df_report['weekly_max'] = (df_daily.groupby(['year_week']).max())['close']  #Get maximum price in each week
         df_report['weekly_min'] = (df_daily.groupby(['year_week']).min())['close']  #Get minimum price in each week
         df_report.to_csv('./data/pandas_weekly_report.csv')
-
+        logging.info("Save data to pandas_weekly_report.csv")
         return df_report
     
     @staticmethod
@@ -93,7 +94,7 @@ class BitcoinPrice:
             conn = sqlite3.connect(self.db_name)
             cur= conn.cursor()
             cur.execute('''DROP TABLE IF EXISTS %s;'''%(self.table_name)) #Drop table if exists
-        
+            
             # Create new table and insert daily data
             cur.execute('''CREATE TABLE %s ( date DATE PRIMARY KEY , 
                                          open FLOAT, 
@@ -103,14 +104,16 @@ class BitcoinPrice:
                                          volume FLOAT, 
                                          market_cap FLOAT,
                                          year_week VARCHAR(15));'''%(self.table_name))
+            logging.info("Created the table!")
     
             daily_df = pd.read_csv('./data/daily_data.csv')
             daily_df['Date'] = pd.to_datetime(daily_df['Date'])
             daily_df.set_index('Date', inplace=True)
             daily_df.to_sql(self.table_name,conn, if_exists='replace')
+            logging.info("Inserted the table!")
             conn.commit()
         except Exception as e:
-            print("Error!")
+            logging.error("Error: ",e)
         finally:
             conn.close()
     
@@ -124,6 +127,9 @@ class BitcoinPrice:
                                   from %s
                                   group by year_week'''%(self.table_name),conn)
         df.to_csv('./data/sql_weekly_report.csv')
+        logging.info("Save data to sql_weekly_report.csv")
+        
+        return df
         
     def get_relative_span_query(self):
         
@@ -135,6 +141,7 @@ class BitcoinPrice:
                                      from %s
                                      group by year_week)'''%(self.table_name), conn)
         print(df)
+        return df
         
         
 ########################################################################################
@@ -170,7 +177,6 @@ def main():
 #  
     #Compute method 1: Python Memory
     weekly_df = Bitcoin.get_weekly_stats_pandas(daily_df)
-    print(len(weekly_df))
 #    Bitcoin.get_relative_span_pandas(weekly_df)
 #  
 #  
