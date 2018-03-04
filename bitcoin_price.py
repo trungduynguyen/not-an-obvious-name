@@ -44,17 +44,17 @@ class BitcoinPrice:
         response= requests.get(URL.format(symbol,market,self._api_key))
         
         json_response = response.json()
-        logging.info("Collected daily data!")
         df = pd.DataFrame(json_response["Time Series (Digital Currency Daily)"]).T[SELECTED_COLS]
         df['Date'] = pd.to_datetime(df.index)   #Transform Date column to datetime datatype
         df.set_index('Date', inplace=True)
         df[df.columns] = df[df.columns].apply(pd.to_numeric)    #Convert prices to float
         df = df.resample('B').mean()                            # Filter and only get data in business day (from Mon to Fri)
-        df.columns = self._saved_cols    #Rename columns
+        df.columns = SAVED_COLS    #Rename columns
         df['year_week'] = df.index.to_series().apply(lambda x: dt.datetime.strftime(x,'%Y-week(%W)'))   #Get week of the date
         
         if(save):
             df.to_csv('./data/daily_data.csv', sep=',')
+            logging.info("Collected daily data!")
             logging.info("Saved data to 'daily_data.csv' !")
         self.set_daily_df(df)
 
