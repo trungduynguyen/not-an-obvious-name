@@ -6,11 +6,21 @@ Structure
 
 - data folder: stores csv files of daily bitcoin prices and weekly prices from both pandas and sql methods
 - db folder: stores sql db file of bitcoin prices collected from Alpha vantage API
-- bitcoin_price.py: contains methods to calculate tasks of the assessment
-	- There are 2 separated sections In memory and SQL methods
-	- For each method, there are 2 main functions: 
-		+ get_weekly_report_[pandas or query]: Computes some basic statistical measurements on daily bitcoin prices and groups by week of the years (manippulate on dataframe or SQL query)
-		+ get_relative_span_[pandas or query]: Computes relative span for each week then gets the Maximum relative span value (manippulate on dataframe or SQL query)
+- bitcoin_price.py: contains Parent class BitcoinPrice with the main purpose of collecting data from API and some abstract methods
+- bitcoin_pandas.py: contains Child class BitcoinPricePandas which inherits from BitcoinPrice class, , computation based on pandas DataFrame approach 
+	+ get_weekly_stats()
+	+ get_max_relative_span()
+	+ process(): run the tasks of the assessment
+- bitcoin_db.py: contains Child class BitcoinPriceDB which inherits from BitcoinPrice class, computation based on SQL query approach 
+	+ get_weekly_stats()
+	+ get_max_relative_span()
+	+ process(): run the tasks of the assessment
+- main.py: main function running entire program
+- query_lib.py: stores SQL query as contants then passes them into BitcoinPriceDB class when a specific query is executed
+- test.py: unittest for the tasks, contains 2 test cases
+	+ test_weekly_data() : Test if two weekly_data csv files from both pandas and sql are equal
+	+ test_max_relative_span(): Test if two maximum weekly relative span values from both pandas and sql are equal
+
 
 - Table bitcoin:
 
@@ -25,7 +35,7 @@ Structure
 | market_cap | FLOAT |
 | year_week | VARCHAR(15) |
 
-How to validate the code
+How to validate and test the code
 ======================================
 
 - Check the 'data' folder: 
@@ -38,14 +48,17 @@ How to validate the code
 	select * from bitcoin limit 10;
 
 	```
-- Compute the average price of each week (only on business day from MON to FRI): 
-	- Check the 'pandas_weekly_report.csv' for the in memory python method
-	- Check the 'sql_weekly_report.csv' for the database using query
+- Run unitest by following command on your IDE: 
 
-Note that: the 2 csv files must have the same values to be considered that the task is correct
+```
+python ./test.py API_KEY  DB_NAME TABLE_NAME
 
-- Compute what is the week that had the greatest relative span on closing prices:
-	- We have the two results which come from calculation in pandas dataframe and SQL query. The 2 results printed on the console must have the same week of the year and relative span value to be considered as the correct results
+#Where Args: 
+# API_KEY: api key obtained from Alpha vantage
+# DB_NAME: path to sqlite db files
+# TABLE_NAME: name of table to store bitcoin daily prices
+#Ex: python ./test.py XXXXXXXXX  ./db/your_dbname.db your_table_name
+```
 
 
 
@@ -67,7 +80,13 @@ git clone https://github.com/trungduynguyen/not-an-obvious-name.git
 
 - Get into the working directory and run the script
 ```
-python ./bitcoin_price.py
+python ./main.py API_KEY  DB_NAME TABLE_NAME
+
+#Where Args: 
+# API_KEY: api key obtained from Alpha vantage
+# DB_NAME: path to sqlite db files
+# TABLE_NAME: name of table to store bitcoin daily prices
+#Ex: python ./main.py XXXXXXXXX  ./db/your_dbname.db your_table_name
 ```
 
 ## 2 . Run on Docker container
@@ -86,7 +105,7 @@ docker build -t bitcoin-price .
 
 - Run Docker container and validate the result
 ```
-docker run bitcoin-price
+ docker run --rm bitcoin-price API_KEY  DB_NAME TABLE_NAME
 ```
 
 - For validating the result, you have to run these commands to get results from container. Copy csv and database files from container to host, then you can check the files:
