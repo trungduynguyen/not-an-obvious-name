@@ -46,6 +46,7 @@ class BitcoinPricePandas(BitcoinPrice):
         
     def process(self):
         
+        self.get_digital_currency_daily(save=True)
         weekly_df = self.get_weekly_stats()
         max_span = self.get_max_relative_span(weekly_df)
         
