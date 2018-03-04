@@ -1,11 +1,9 @@
-FROM python:3
+FROM python:3.6.4
 
 WORKDIR /
 
-ADD . /
-
-COPY requirements.txt ./
+COPY . ./
 
 RUN pip3 install --no-cache-dir -r requirements.txt
 
-CMD [ "python", "./bitcoin_price.py" ]
+ENTRYPOINT [ "python", "./main.py" ]
