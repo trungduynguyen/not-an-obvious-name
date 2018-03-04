@@ -16,7 +16,6 @@ def main(api_key,db_name,table_name):
     btc_pandas = bitpd(api_key)
     
     # Get Bitcoin daily prices via API and store to daily_data.csv file 
-    btc_pandas.get_digital_currency_daily()
     btc_pandas.process()
   
     # Create sqlite table to store data
