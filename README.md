@@ -48,7 +48,7 @@ How to validate and test the code
 	select * from bitcoin limit 10;
 
 	```
-- Run unitest by following command on your IDE: 
+- Run unitest by following command on your IDE: Make sure there exist csv files in data folder before running unitest
 
 ```
 python ./test.py API_KEY  DB_NAME TABLE_NAME
