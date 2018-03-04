@@ -26,7 +26,7 @@ class BitcoinPrice:
         return self
         
     @staticmethod
-    def read_from_csv(filename, columns):
+    def read_from_csv(filename, columns = None):
         return pd.read_csv(filename, usecols=columns)
         
     def get_daily_df(self, columns = SAVED_COLS):
