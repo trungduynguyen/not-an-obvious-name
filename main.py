@@ -7,6 +7,9 @@ import argparse
 import logging
 from bitcoin_pandas import BitcoinPricePandas as bitpd
 from bitcoin_db import BitcoinPriceDB as bitdb
+import pathlib
+
+PATHS = ['./data','./db']
 
 def main(api_key,db_name,table_name):
        
@@ -31,5 +34,8 @@ if __name__== "__main__":
     parser.add_argument('db_name', action="store", type=str)
     parser.add_argument('table_name', action="store", type=str)
     args = parser.parse_args()
+    
+    for path in PATHS:
+        pathlib.Path(path).mkdir(parents=True, exist_ok=True)
     
     main(args.api_key, args.db_name, args.table_name)      
