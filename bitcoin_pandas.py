@@ -19,6 +19,7 @@ class BitcoinPricePandas(BitcoinPrice):
         daily_df = self.get_daily_df(['close','year_week'])
         
         df_report = pd.DataFrame(index = daily_df['year_week'].unique() )
+        df_report.index.name  = 'year_week'
         df_report['weekly_average'] = (daily_df.groupby(['year_week']).mean())['close'] #Get average price in each week
         df_report['weekly_max'] = (daily_df.groupby(['year_week']).max())['close']  #Get maximum price in each week
         df_report['weekly_min'] = (daily_df.groupby(['year_week']).min())['close']  #Get minimum price in each week
