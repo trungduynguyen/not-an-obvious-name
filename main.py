@@ -1,39 +1,27 @@
 # -*- coding: utf-8 -*-
 """
-
 @author: Trung Duy
 """
 
 import argparse
 import logging
-from bitcoin_pandas import BitcoinPricePandas
+from bitcoin_pandas import BitcoinPricePandas as bitpd
+from bitcoin_db import BitcoinPriceDB as bitdb
 
 def main(api_key,db_name,table_name):
        
     logging.info('Starting process')
   
     #Inititate new instance
-    btc_pandas = BitcoinPricePandas(api_key)
+    btc_pandas = bitpd(api_key)
     
     # Get Bitcoin daily prices via API and store to daily_data.csv file 
     btc_pandas.get_digital_currency_daily()
     btc_pandas.process()
-#  
-#    # Create sqlite table to store data
-#    Bitcoin.create_table()
   
-#    #Compute method 1: Python Memory
-#    weekly_df = Bitcoin.get_weekly_stats_pandas(daily_df)
-#    Bitcoin.get_relative_span_pandas(weekly_df)
-#  
-#  
-    #Compute method 2: SQL Queries
-    #Bitcoin.get_weekly_stats_query() 
-    #Bitcoin.get_relative_span_query()
-#  
-#    Bitcoin.close_db()
-#  
-#    print("FINISH PROGRAM!")
+    # Create sqlite table to store data
+    with bitdb(api_key,db_name,table_name) as btc_db:
+        btc_db.process()
 
 if __name__== "__main__":
     logging.basicConfig(format='%(asctime)s %(levelname)s:%(message)s',datefmt='%m/%d/%Y %I:%M:%S',level=logging.INFO)
@@ -45,4 +33,4 @@ if __name__== "__main__":
     parser.add_argument('table_name', action="store", type=str)
     args = parser.parse_args()
     
-    main(args.api_key,args.db_name,args.table_name)      
+    main(args.api_key, args.db_name, args.table_name)      
